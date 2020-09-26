@@ -9,18 +9,23 @@ body, html {
   width: 100vw;
   height: 100vh;
   background: #565658;
+  user-select: none;
 }
 
+
+/* STYLE FOR CONTAINER HOLDING CARDS(GAME */
 .memoryGame {
   display: flex;
   flex-wrap: wrap;
   margin: auto;
   width: 70%;
-  min-height: 650px;
+  height: 650px;
   background: #565658;
   justify-content: space-evenly;
 }
 
+
+/* STYLE FOR EACH CARD */
 .cards {
   display: flex;
   justify-content: center;
@@ -33,18 +38,17 @@ body, html {
   border-radius: 5px;
   transform: scale(1);
   background: #33E6FF;
-  color: #565658;
+  color: #33E6FF;
+  cursor: pointer;
 }
 
-
-.cards:active {
-  transform: scale(0.97);
-  transition: transform .2s;
+/* CLASS TO ADD AFTER CLICK */
+.showText {
+  color: black;
 }
 
 
 /* NEW GAME SCREEN */
-
 #modal {
   position: fixed;
   font-family: Arial, Helvetica, sans-serif;

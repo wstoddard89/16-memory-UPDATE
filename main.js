@@ -1,132 +1,96 @@
-/* 
-PROBLEM: Create a "new game screen" with a single "new game" choice.
-EXAMPLE:
-DATA-STRUCTURE:
-ALGORITHM:
-CODE: 
-*/
-window.onload = function () {
+
+window.onload = function () { // New game screen will load first
   document.getElementById("buttonModal").onclick = function () {
     document.getElementById("modal").style.display = "none"
   }
 }
 
-const cards = document.querySelectorAll(".cards")
+const cards = document.querySelectorAll(".cards") // Grabs each card
 
-let hasFlipped = false
-let stopClicks = false
+cards.forEach((card) => card.addEventListener('click', clickCard)); //Click event for each card, runs "clickCard" function
+
+let hasBeenClicked = false
+let thirdClick = false
 let cardOne
 let cardTwo
+let matchPairsArray = []
 
-function flipCard() {
-  if (stopClicks) {
+function clickCard() {
+  if (thirdClick) { // Protects bug of allowing a third click before determining if match or not
     return
   }
-  this.classList.add("showText")
+  if (this === cardOne) { // Prevents bug of allowing clicking on the same card twice for a match
+    return
+  }
   
-  if (!hasFlipped) {
-    hasFlipped = true
+  this.classList.add("showText") // Adds the class to show the number on the card when clicked
+  
+  if (!hasBeenClicked) {
+    hasBeenClicked = true // When "hasBeenClicked" is set to true, sets as the first click
     cardOne = this
+
+    console.log(hasBeenClicked, cardOne)
     return
 
   } else {
+    //second click
+    hasBeenClicked = false // When "hasBeenClicked" is set to false, sets as the second click
     cardTwo = this
-    hasFlipped = false
+    
+    console.log(hasBeenClicked, cardTwo)
 
-  isMatch()
+    cardsMatch()
   }
 }
 
-function isMatch() {
+function cardsMatch() { //Compares if both clicked cards have the same data attribute
   if (cardOne.dataset.title === cardTwo.dataset.title) {
+    console.log(cardOne.dataset.title)
+    console.log(cardTwo.dataset.title)
     keepShowing()
+    matchPairsArray.push(cardOne, cardTwo)
+    console.log(matchPairsArray)
+    winningScreen()
     return
   }
-  unflipCards()
+  nonMatchCards()
 }
 
- function keepShowing() {
-   cardOne.removeEventListener('click', flipCard)
-   cardTwo.removeEventListener('click', flipCard)
+ function keepShowing() { // Removes click function if there is a match, causing them to stay showing
+   cardOne.removeEventListener('click', clickCard)
+   cardTwo.removeEventListener('click', clickCard)
+   resetClicks()
  }
 
-function unflipCards() {
-  stopClicks = true
+function nonMatchCards() { // Hides text again after setTimeout if cards don't match
+  thirdClick = true
 
   setTimeout(() => {
     cardOne.classList.remove('showText')
     cardTwo.classList.remove('showText')
 
-    stopClicks = false
+  resetClicks()
   }, 1500)
 }
 
-(function shuffle() {
+
+function resetClicks() {  // Resets the variables to false and null, so that you can't click on the same
+  hasBeenClicked = false  // card, and so you can use the same card as first click twice in a row
+  thirdClick = false
+  cardOne = null
+  cardTwo = null
+}
+
+function winningScreen() { // Display an alert screen saying you won if you pick all matching pairs
+  if (matchPairsArray.length > 17) {
+    console.log('should show alert')
+    alert('You found all the matching pairs! Congratulations, you WON!')
+  }
+}
+
+(function shuffle() { // IIFE function to shuffle the divs when the game loads
   cards.forEach(card => {
     let ramdomPos = Math.floor(Math.random() * 18);
     card.style.order = ramdomPos;
   });
 })()
-
-
-cards.forEach((card) => card.addEventListener('click', flipCard));
-
-
-
-
-
-
-
-
-// document.querySelectorAll(".card").forEach(function (card) {
-//   card.addEventListener("click", function () {
-//     console.log(card)
-//     if (!clickedCard) {
-//       // console.log("clicked :", clickedCard)
-//       clickedCard = card
-//       // console.log("NOW IS", card)
-//     } else {
-//       if (clickedCard.querySelector(".card") ===
-//       card.querySelector(".card")) {
-//         console.log('match')
-//       }
-//     } 
-//   })
-// })
-
-// document.querySelector(".memoryGame").addEventListener("click", function (e) {
-//   const userClick = e.target
-
-//   console.log(userClick)
-//   const card = document.querySelectorAll(".card")
-//   if (!clickedCard) {
-//     clickedCard = card
-//     console.log(clickedCard)
-//   }
-// })
-// if (userClick) {
-//   userGuesses.push(userClick)
-//   console.log(userGuesses)
-
-//  if (userGuesses[0] === userGuesses[1]) {
-//    correctGuesses.push(userGuesses[0], userGuesses[1])
-//    console.log(correctGuesses)
-//    userGuesses = []
-// } else {
-//    for (let i =0; i <= userGuesses.length; i++) {
-//     userGuesses[i].classList.remove('cardBottom')
-//         userGuesses = []
-
-//    }
-
-//  }
-//   }
-// })
-
-// const cards = document.querySelector(".memoryGame")
-
-// function flipCard() {
-//   this.classList.toggle("flip")
-// }
-
-// cards.forEach(card => card.addEventListener('click', flipCard);
